@@ -267,3 +267,17 @@ attachments_020:
   filename: root_attachment.txt
   filesize: 54
   author_id: 2
+attachments_021:
+  content_type: application/pdf
+  downloads: 0
+  created_on: 2016-05-27 15:23:14 +09:00
+  disk_filename: 146435549450_testfile_1.pdf
+  disk_directory: "2016/05"
+  container_id: 14
+  digest: ab39db5ed28060b91c9d9b086473d65a
+  id: 21
+  container_type: Issue
+  description: ""
+  filename: testfile.pdf
+  filesize: 7870
+  author_id: 2

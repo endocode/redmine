@@ -392,6 +392,10 @@ class AttachmentTest < ActiveSupport::TestCase
     assert_equal true, Attachment.new(:filename => 'test.jpg').thumbnailable?
   end
 
+  def test_thumbnailable_should_be_true_for_pdfs
+    assert_equal true, Attachment.new(:filename => 'test.pdf').thumbnailable?
+  end
+
   def test_thumbnailable_should_be_true_for_non_images
     assert_equal false, Attachment.new(:filename => 'test.txt').thumbnailable?
   end
@@ -402,9 +406,21 @@ class AttachmentTest < ActiveSupport::TestCase
       attachment = Attachment.find(16)
       Attachment.clear_thumbnails
 
-      assert_difference "Dir.glob(File.join(Attachment.thumbnails_storage_path, '*.thumb')).size" do
+      assert_difference "Dir.glob(File.join(Attachment.thumbnails_storage_path, '*.thumb.png')).size" do
         thumbnail = attachment.thumbnail
-        assert_equal "16_8e0294de2441577c529f170b6fb8f638_100.thumb", File.basename(thumbnail)
+        assert_equal "16_8e0294de2441577c529f170b6fb8f638_100.thumb.png", File.basename(thumbnail)
+        assert File.exists?(thumbnail)
+      end
+    end
+
+    def test_thumbnail_should_generate_the_thumbnail_from_pdf
+      set_fixtures_attachments_directory
+      attachment = Attachment.find(21)
+      Attachment.clear_thumbnails
+
+      assert_difference "Dir.glob(File.join(Attachment.thumbnails_storage_path, '*.thumb.png')).size" do
+        thumbnail = attachment.thumbnail
+        assert_equal "21_ab39db5ed28060b91c9d9b086473d65a_100.thumb.png", File.basename(thumbnail)
         assert File.exists?(thumbnail)
       end
     end

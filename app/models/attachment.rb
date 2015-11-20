@@ -193,7 +193,7 @@ class Attachment < ActiveRecord::Base
   end
 
   def image?
-    !!(self.filename =~ /\.(bmp|gif|jpg|jpe|jpeg|png)$/i)
+    !!(self.filename =~ /\.(bmp|gif|jpg|jpe|jpeg|png|pdf|tiff|tif)$/i)
   end
 
   def thumbnailable?
@@ -214,7 +214,7 @@ class Attachment < ActiveRecord::Base
         size = Setting.thumbnails_size.to_i
       end
       size = 100 unless size > 0
-      target = File.join(self.class.thumbnails_storage_path, "#{id}_#{digest}_#{size}.thumb")
+      target = File.join(self.class.thumbnails_storage_path, "#{id}_#{digest}_#{size}.thumb.png")
 
       begin
         Redmine::Thumbnail.generate(self.diskfile, target, size)
@@ -227,7 +227,7 @@ class Attachment < ActiveRecord::Base
 
   # Deletes all thumbnails
   def self.clear_thumbnails
-    Dir.glob(File.join(thumbnails_storage_path, "*.thumb")).each do |file|
+    Dir.glob(File.join(thumbnails_storage_path, "*.thumb.png")).each do |file|
       File.delete file
     end
   end

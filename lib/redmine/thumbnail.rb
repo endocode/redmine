@@ -29,7 +29,7 @@ module Redmine
       return nil unless convert_available?
       unless File.exists?(target)
         # Make sure we only invoke Imagemagick if this is actually an image
-        unless File.open(source) {|f| MimeMagic.by_magic(f).try(:image?)}
+        unless File.open(source) {|f| MimeMagic.by_magic(f).try(:image?) || MimeMagic.by_magic(f).child_of?('application/pdf')}
           return nil
         end
         directory = File.dirname(target)
@@ -37,7 +37,7 @@ module Redmine
           FileUtils.mkdir_p directory
         end
         size_option = "#{size}x#{size}>"
-        cmd = "#{shell_quote CONVERT_BIN} #{shell_quote source} -thumbnail #{shell_quote size_option} #{shell_quote target}"
+        cmd = "#{shell_quote CONVERT_BIN} #{shell_quote source}[0] -thumbnail #{shell_quote size_option} #{shell_quote target}"
         unless system(cmd)
           logger.error("Creating thumbnail failed (#{$?}):\nCommand: #{cmd}")
           return nil
